@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rohit.lpregister.R;
+import com.rohit.lpregister.model.Candidate;
 import com.rohit.lpregister.utils.InputValidation;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -39,6 +40,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1001;
 
     byte [] mCandidateImageBytes;
+
+    Candidate mCandidate;
 
 
     private EditText mEditTextFirstName,mEditTextLastName,mEditTextEmail,mEditTextMobile,mEditTextDob;
@@ -154,11 +157,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void getData(){
 
 
+        if (mRadioGroupGender != null) {
 
+            mRegisterGender = mRadioButton.getText().toString().trim();
 
-
-
-
+        }
 
         StringBuilder sb = new StringBuilder();
 
@@ -176,15 +179,22 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         sb.append("  ");
         sb.append(Objects.requireNonNull(mTextInputEditTextConfirmPassword.getText()).toString().trim());
 
-        if (mRadioGroupGender != null) {
-
-            mRegisterGender = mRadioButton.getText().toString().trim();
-            sb.append("  ");
-            sb.append(mRegisterGender);
-        }
-
+        sb.append("  ");
+        sb.append(mRegisterGender);
 
         Toast.makeText(this, sb, Toast.LENGTH_SHORT).show();
+
+
+
+        mCandidate = new Candidate();
+
+        mCandidate.setFirstName(mEditTextFirstName.getText().toString().trim());
+        mCandidate.setLastName(mEditTextLastName.getText().toString().trim());
+        mCandidate.setEmailId(mEditTextEmail.getText().toString().trim());
+        mCandidate.setMobileNumber(mEditTextMobile.getText().toString().trim());
+        mCandidate.setDateOfBirth(mEditTextDob.getText().toString().trim());
+        mCandidate.setPassword(mTextInputEditTextPassword.getText().toString().trim());
+        mCandidate.setGender(mRegisterGender);
 
     }
 
