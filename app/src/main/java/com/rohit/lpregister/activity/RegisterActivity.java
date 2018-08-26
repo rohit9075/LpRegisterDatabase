@@ -37,7 +37,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener,
         RadioGroup.OnCheckedChangeListener{
 
-
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1001;
 
     private static final String TAG = "RegisterActivity";
@@ -45,32 +44,20 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     byte [] mCandidateImageBytes;
 
     Candidate mCandidate;
-
-
+    String  mRegisterGender;
+    DatabaseHelper mDataBaseHelper;
     private EditText mEditTextFirstName,mEditTextLastName,mEditTextEmail,mEditTextMobile,mEditTextDob;
-
     private TextInputEditText mTextInputEditTextPassword, mTextInputEditTextConfirmPassword;
-
     private Button mButtonRegister;
-
     private TextView mTextViewAlreadyMember;
-
     // ImageView Instance Variable
     private CircleImageView mImageViewCandidateImage;
-
     // RadioGroup object Declaration.
     private RadioGroup mRadioGroupGender;
-
     // RadioButton object Declaration.
     private RadioButton mRadioButton;
-
     private InputValidation mInputValidation;
-
-    String  mRegisterGender;
-
     private RelativeLayout mRelativeLayout;
-
-    DatabaseHelper mDataBaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,30 +154,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         if (mRadioGroupGender != null) {
 
             mRegisterGender = mRadioButton.getText().toString().trim();
-            }
-
-//        StringBuilder sb = new StringBuilder();
-//
-//        sb.append(mEditTextFirstName.getText().toString().trim());
-//        sb.append("  ");
-//        sb.append(mEditTextLastName.getText().toString().trim());
-//        sb.append("  ");
-//        sb.append(mEditTextEmail.getText().toString().trim());
-//        sb.append("  ");
-//        sb.append(mEditTextMobile.getText().toString().trim());
-//        sb.append("  ");
-//        sb.append(mEditTextDob.getText().toString().trim());
-//        sb.append("  ");
-//        sb.append(Objects.requireNonNull(mTextInputEditTextPassword.getText()).toString().trim());
-//        sb.append("  ");
-//        sb.append(Objects.requireNonNull(mTextInputEditTextConfirmPassword.getText()).toString().trim());
-//
-//        sb.append("  ");
-//        sb.append(mRegisterGender);
-//
-//        Toast.makeText(this, sb, Toast.LENGTH_SHORT).show();
-
-
+        }
 
         // candidate object instantiation
         mCandidate = new Candidate();
@@ -202,7 +166,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         mCandidate.setEmailId(mEditTextEmail.getText().toString().trim());
         mCandidate.setMobileNumber(mEditTextMobile.getText().toString().trim());
         mCandidate.setDateOfBirth(mEditTextDob.getText().toString().trim());
-        mCandidate.setPassword(mTextInputEditTextPassword.getText().toString().trim());
+        mCandidate.setPassword(Objects.requireNonNull(mTextInputEditTextPassword.getText()).toString().trim());
         mCandidate.setGender(mRegisterGender);
 
     }
@@ -269,9 +233,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
 
 
-         getData();   //getData() method call
+        getData();   //getData() method call
 
-         postDataToDatabase(); // posting candidate data into database
+        postDataToDatabase(); // posting candidate data into database
 
 
     }
@@ -282,19 +246,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private void postDataToDatabase() {
 
         if(!mDataBaseHelper.checkCandidate(mEditTextEmail.getText().toString().trim()))
-       {
+        {
 
-           mDataBaseHelper.addCandidate(mCandidate,mCandidateImageBytes);
+            mDataBaseHelper.addCandidate(mCandidate,mCandidateImageBytes);
 
 //            Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
 //            intent.putExtra("EMAIL", mEmailId.getText().toString().trim());
 //            startActivity(intent);
-           finish();
-       }
-       else
-       {
-           Toast.makeText(getApplicationContext(),"Email Already Exists",Toast.LENGTH_LONG).show();
-       }
+            finish();
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(),"Email Already Exists",Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
@@ -384,21 +348,21 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             if (resultCode == RESULT_OK) {
 
 
-                    Uri resultUri = result.getUri();
+                Uri resultUri = result.getUri();
 
-                    // setting the image to imageView
-                    mImageViewCandidateImage.setImageURI(resultUri);
+                // setting the image to imageView
+                mImageViewCandidateImage.setImageURI(resultUri);
 
 
-                    // converting the image to bytes Arrays
+                // converting the image to bytes Arrays
 
-                    mImageViewCandidateImage.setDrawingCacheEnabled(true);
-                    mImageViewCandidateImage.buildDrawingCache();
-                    Bitmap bitmap=mImageViewCandidateImage.getDrawingCache();
-                    ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG,100,outputStream);
+                mImageViewCandidateImage.setDrawingCacheEnabled(true);
+                mImageViewCandidateImage.buildDrawingCache();
+                Bitmap bitmap=mImageViewCandidateImage.getDrawingCache();
+                ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG,100,outputStream);
 
-                    mCandidateImageBytes = outputStream.toByteArray();
+                mCandidateImageBytes = outputStream.toByteArray();
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
