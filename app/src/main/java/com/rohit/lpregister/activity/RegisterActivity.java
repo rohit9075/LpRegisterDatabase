@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -166,29 +167,28 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         if (mRadioGroupGender != null) {
 
             mRegisterGender = mRadioButton.getText().toString().trim();
+            }
 
-        }
-
-        StringBuilder sb = new StringBuilder();
-
-        sb.append(mEditTextFirstName.getText().toString().trim());
-        sb.append("  ");
-        sb.append(mEditTextLastName.getText().toString().trim());
-        sb.append("  ");
-        sb.append(mEditTextEmail.getText().toString().trim());
-        sb.append("  ");
-        sb.append(mEditTextMobile.getText().toString().trim());
-        sb.append("  ");
-        sb.append(mEditTextDob.getText().toString().trim());
-        sb.append("  ");
-        sb.append(Objects.requireNonNull(mTextInputEditTextPassword.getText()).toString().trim());
-        sb.append("  ");
-        sb.append(Objects.requireNonNull(mTextInputEditTextConfirmPassword.getText()).toString().trim());
-
-        sb.append("  ");
-        sb.append(mRegisterGender);
-
-        Toast.makeText(this, sb, Toast.LENGTH_SHORT).show();
+//        StringBuilder sb = new StringBuilder();
+//
+//        sb.append(mEditTextFirstName.getText().toString().trim());
+//        sb.append("  ");
+//        sb.append(mEditTextLastName.getText().toString().trim());
+//        sb.append("  ");
+//        sb.append(mEditTextEmail.getText().toString().trim());
+//        sb.append("  ");
+//        sb.append(mEditTextMobile.getText().toString().trim());
+//        sb.append("  ");
+//        sb.append(mEditTextDob.getText().toString().trim());
+//        sb.append("  ");
+//        sb.append(Objects.requireNonNull(mTextInputEditTextPassword.getText()).toString().trim());
+//        sb.append("  ");
+//        sb.append(Objects.requireNonNull(mTextInputEditTextConfirmPassword.getText()).toString().trim());
+//
+//        sb.append("  ");
+//        sb.append(mRegisterGender);
+//
+//        Toast.makeText(this, sb, Toast.LENGTH_SHORT).show();
 
 
 
@@ -383,22 +383,22 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
 
-                Uri resultUri = result.getUri();
 
-                // setting the image to imageView
-                mImageViewCandidateImage.setImageURI(resultUri);
+                    Uri resultUri = result.getUri();
+
+                    // setting the image to imageView
+                    mImageViewCandidateImage.setImageURI(resultUri);
 
 
-                // converting the image to bytes Arrays
+                    // converting the image to bytes Arrays
 
-                mImageViewCandidateImage.setDrawingCacheEnabled(true);
-                mImageViewCandidateImage.buildDrawingCache();
-                Bitmap bitmap=mImageViewCandidateImage.getDrawingCache();
-                ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG,100,outputStream);
+                    mImageViewCandidateImage.setDrawingCacheEnabled(true);
+                    mImageViewCandidateImage.buildDrawingCache();
+                    Bitmap bitmap=mImageViewCandidateImage.getDrawingCache();
+                    ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG,100,outputStream);
 
-                mCandidateImageBytes = outputStream.toByteArray();
-
+                    mCandidateImageBytes = outputStream.toByteArray();
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
@@ -406,6 +406,5 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             }
         }
     }
-
 
 }
