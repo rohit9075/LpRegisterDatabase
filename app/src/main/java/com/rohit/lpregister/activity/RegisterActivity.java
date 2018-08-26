@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -23,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rohit.lpregister.R;
+import com.rohit.lpregister.database.DatabaseHelper;
 import com.rohit.lpregister.model.Candidate;
 import com.rohit.lpregister.utils.InputValidation;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -38,6 +38,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
 
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1001;
+
+    private static final String TAG = "RegisterActivity";
 
     byte [] mCandidateImageBytes;
 
@@ -66,6 +68,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     String  mRegisterGender;
 
     private RelativeLayout mRelativeLayout;
+
+    DatabaseHelper mDataBaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +128,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void initObject(){
 
         mInputValidation = new InputValidation(this);
+
+        mDataBaseHelper = new DatabaseHelper(this);
     }
 
     /**
@@ -186,7 +192,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
 
 
+        // candidate object instantiation
         mCandidate = new Candidate();
+
+        // storing candidate data into candidate object
 
         mCandidate.setFirstName(mEditTextFirstName.getText().toString().trim());
         mCandidate.setLastName(mEditTextLastName.getText().toString().trim());
@@ -203,7 +212,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void onCheckedChanged(RadioGroup group, int checkedId) {
 
         // getting the checked button id.
-        mRadioButton = (RadioButton) group.findViewById(checkedId);
+        mRadioButton = group.findViewById(checkedId);
     }
 
     public void inputFieldValidation() {
@@ -260,9 +269,32 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
 
 
-        getData();   //getData() method call
+         getData();   //getData() method call
+
+         postDataToDatabase(); // posting candidate data into database
 
 
+    }
+
+    /**
+     * postDataToDatabase() method definition
+     */
+    private void postDataToDatabase() {
+
+        if(!mDataBaseHelper.checkCandidate(mEditTextEmail.getText().toString().trim()))
+       {
+
+           mDataBaseHelper.addCandidate(mCandidate,mCandidateImageBytes);
+
+//            Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
+//            intent.putExtra("EMAIL", mEmailId.getText().toString().trim());
+//            startActivity(intent);
+           finish();
+       }
+       else
+       {
+           Toast.makeText(getApplicationContext(),"Email Already Exists",Toast.LENGTH_LONG).show();
+       }
     }
 
     /**
@@ -313,7 +345,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
-//                    Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
 
 
                     // Starting the cropping activity
@@ -325,6 +357,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
 //                        showStoragePermissionRationale();
                         //should provide the explanation for the permission
+                        Log.d(TAG, "onRequestPermissionsResult: waiting for permission");
                     } else {
                         Toast.makeText(this, "Should grant permission", Toast.LENGTH_SHORT).show();
                     }
@@ -369,7 +402,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
-//                Log.d(TAG, "onActivityResult: " + error);
+                Log.d(TAG, "onActivityResult: " + error);
             }
         }
     }
