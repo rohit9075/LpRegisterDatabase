@@ -3,6 +3,7 @@ package com.rohit.lpregister.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,6 +27,7 @@ import com.rohit.lpregister.utils.InputValidation;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -35,6 +37,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
 
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1001;
+
+    byte [] mCandidateImageBytes;
 
 
     private EditText mEditTextFirstName,mEditTextLastName,mEditTextEmail,mEditTextMobile,mEditTextDob;
@@ -148,6 +152,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
      * getData() method definition
      */
     public void getData(){
+
+
+
+
+
+
+
 
         StringBuilder sb = new StringBuilder();
 
@@ -328,10 +339,24 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
+
                 Uri resultUri = result.getUri();
 
                 // setting the image to imageView
                 mImageViewCandidateImage.setImageURI(resultUri);
+
+
+                // converting the image to bytes Arrays
+
+                mImageViewCandidateImage.setDrawingCacheEnabled(true);
+                mImageViewCandidateImage.buildDrawingCache();
+                Bitmap bitmap=mImageViewCandidateImage.getDrawingCache();
+                ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG,100,outputStream);
+
+                mCandidateImageBytes = outputStream.toByteArray();
+
+
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
 //                Log.d(TAG, "onActivityResult: " + error);
