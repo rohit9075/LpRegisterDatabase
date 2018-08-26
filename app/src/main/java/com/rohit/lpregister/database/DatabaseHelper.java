@@ -15,7 +15,7 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
 
-    Context mContext;
+    private Context mContext;
 
 
     public DatabaseHelper(Context context) {
@@ -73,7 +73,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] selectionArgs = {email};
 
         // query candidate table with condition
-        /**
+        /*
          * Here query function is used to fetch records from candidate table this function works like we use sql query.
          * SQL query equivalent to this query function is
          * SELECT user_id FROM candidate WHERE user_email = 'jack@androidtutorialshub.com';
@@ -83,11 +83,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
-        if (cursorCount > 0) {
-            return true;
-        }
+        return cursorCount > 0;
 
-        return false;
     }
 
 
